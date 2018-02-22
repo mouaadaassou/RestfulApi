@@ -15,7 +15,9 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.immoerp.webservices.RestfulApi.dao.UserDAO;
 import com.immoerp.webservices.RestfulApi.domain.User;
-import com.immoerp.webservices.RestfulApi.doman.exceptionhandler.UserNotFoundException;
+import com.immoerp.webservices.RestfulApi.domain.exceptionhandler.DateNotProvided;
+import com.immoerp.webservices.RestfulApi.domain.exceptionhandler.NameNotProvided;
+import com.immoerp.webservices.RestfulApi.domain.exceptionhandler.UserNotFoundException;
 
 @RestController
 @RequestMapping(path = "/users")
@@ -31,6 +33,10 @@ public class UserController {
 
 	@PostMapping("/user")
 	public ResponseEntity<Object> addUser(@RequestBody User user) {
+		if(user.getName() == null)
+			throw new NameNotProvided("can not find any name value in the request");
+		else if(user.getDate() == null)
+			throw new DateNotProvided("can not find any date value in the reques");
 		User savedUser = userDAO.save(user);
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedUser.getId())
 				.toUri();
