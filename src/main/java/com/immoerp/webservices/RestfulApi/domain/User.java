@@ -2,6 +2,9 @@ package com.immoerp.webservices.RestfulApi.domain;
 
 import java.util.Date;
 
+import javax.validation.constraints.Past;
+import javax.validation.constraints.Size;
+
 public class User {
 
 	public User(Integer id, String name, Date date) {
@@ -30,6 +33,7 @@ public class User {
 		this.id = id;
 	}
 
+	@Size(min = 2)
 	public String getName() {
 		return name;
 	}
@@ -38,12 +42,27 @@ public class User {
 		this.name = name;
 	}
 
+	@Past
 	public Date getDate() {
 		return date;
 	}
 
 	public void setDate(Date date) {
 		this.date = date;
+	}
+	
+	
+
+	@Override
+	public boolean equals(Object obj) {
+		if(this == obj)
+			return true;
+		else if (obj == null)
+			return false;
+		else {
+			User user = (User)obj;
+			return this.getId().equals(user.getId());
+		}
 	}
 
 	private String name;

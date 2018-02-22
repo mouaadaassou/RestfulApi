@@ -3,8 +3,11 @@ package com.immoerp.webservices.RestfulApi;
 import java.net.URI;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,7 +35,7 @@ public class UserController {
 	}
 
 	@PostMapping("/user")
-	public ResponseEntity<Object> addUser(@RequestBody User user) {
+	public ResponseEntity<Object> addUser(@Valid @RequestBody User user) {
 		if(user.getName() == null)
 			throw new NameNotProvided("can not find any name value in the request");
 		else if(user.getDate() == null)
@@ -49,5 +52,13 @@ public class UserController {
 		if(user == null)
 			throw new UserNotFoundException(String.format("the user with the id %d not found", id));
 		return user;
+	}
+	
+	@DeleteMapping("/user/{id}")
+	public User deleteUser(@PathVariable int id) {
+		User deletedUser = this.userDAO.deleteUser(id);
+		if(deletedUser == null)
+			throw new UserNotFoundException(String.format("the user with the id %d not found", id));
+		return deletedUser;
 	}
 }
